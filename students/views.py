@@ -1,9 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-
 from .models import Student
-# HttpRequest
-# HttpResponse
+
 
 def index(request):
     students = Student.objects.all().order_by('birthday')
@@ -14,4 +12,6 @@ def index(request):
     string += '</tbody></table>'
     response = HttpResponse(string)
     return response
+
+
 
