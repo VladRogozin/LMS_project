@@ -1,14 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
 
-DOMAINS = ('gmail.com', 'yahoo.com')
 
-
-def validate_email_domain(value):
-    #domains = ('gmail.com','yahoo.com')
-    domain = value.split('@')[-1]
-    if domain not in DOMAINS:
-        raise ValidationError(f'Emails domain "{domain}" is not correct')
+def validate_unique_email(value):
+    from students.models import Student
+    if Student.objects.filter(email=value).exists():
+        raise ValidationError(f'this email already exists {value}')
 
 
 @deconstructible
