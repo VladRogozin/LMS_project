@@ -23,6 +23,7 @@ class Student(models.Model):
     birthday = models.DateField(default='2003-01-01')
     city = models.CharField(max_length=50, null=True, blank=True)
     email = models.EmailField(validators=[validate_unique_email])    #validators=[ValidateEmailDomain(*VALID_DOMAINS)]
+    phone = models.CharField(max_length=20, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
