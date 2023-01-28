@@ -19,7 +19,6 @@ class Student(models.Model):
         verbose_name='Last name',
         db_column='l_name'
     )
-    age = models.PositiveIntegerField()
     birthday = models.DateField(default='2003-01-01')
     city = models.CharField(max_length=50, null=True, blank=True)
     email = models.EmailField(validators=[validate_unique_email])    #validators=[ValidateEmailDomain(*VALID_DOMAINS)]

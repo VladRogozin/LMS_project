@@ -5,7 +5,7 @@ from django.shortcuts import render
 from webargs.fields import Str
 from webargs.djangoparser import use_args
 
-from .forms import CreateStudentForm
+from .forms import CreateStudentForm, UpdateStudentForm
 from .models import Student
 from .utils import format_list_students
 
@@ -72,3 +72,25 @@ def create_student_view(request):
     return HttpResponse(html_form)
 
 
+def update_student(request, pk):
+    student = Student.objects.get(pk=pk)
+    if request.method == 'GET':
+        form = UpdateStudentForm(instance=student)
+    elif request.method == 'POST':
+        form = UpdateStudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/students/')
+
+    token = get_token(request)
+    html_form = F'''
+            <form method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{token}">
+                <table>
+                    {form.as_table()}
+                </table>
+                <input type="submit" value="Submit"><br>
+                <a href="/students/">Back to list</a>
+            </form> 
+        '''
+    return HttpResponse(html_form)
