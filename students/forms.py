@@ -30,7 +30,6 @@ class CreateStudentForm(forms.ModelForm):
         return value.capitalize()
 
 
-
 class UpdateStudentForm(forms.ModelForm):
     class Meta:
         model = Student

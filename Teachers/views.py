@@ -1,50 +1,56 @@
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.middleware.csrf import get_token
 from django.shortcuts import render
 from webargs.djangoparser import use_args
+from Teachers.forms import CreateTeacherForm, UpdateTeacherForm
 from webargs.fields import Str
-from django.db.models import Q
+from .models import Teacher
+from .utils import format_list_teachers
 
-from groups.forms import CreateGroupForm, UpdateGroupForm
-from groups.models import Group
-from groups.utils import format_list_groups
+
+def index(request):
+    return HttpResponse('Welcome')
 
 
 @use_args(
     {
-        'group_name': Str(required=False),
+        'first_name': Str(required=False),
+        'last_name': Str(required=False),
     },
     location='query',
 )
-def get_groups(request, args):
-    groups = Group.objects.all().order_by('group_start')           #!!!!
+def get_teachers(request, args):
+    teachers = Teacher.objects.all().order_by('salary')
 
-    if len(args) and args.get('group_name'):
-        groups = groups.filter(
-            Q(group_name=args.get('group_name', ''))
+    if len(args) and (args.get('first_name') or args.get('last_name')):
+        teachers = teachers.filter(
+            Q(first_name=args.get('first_name', '')) | Q(last_name=args.get('last_name', ''))
         )
 
     form = '''
         <form method="get">
-            <label for="gname">Group name:</label>
-            <input type="text" id="gname" name="group_name"><br><br>
+            <label for="fname">First name:</label>
+            <input type="text" id="fname" name="first_name"><br><br>
+            <label for="lname">Last name:</label>
+            <input type="text" id="lname" name="last_name"><br><br><br>
             <input type="submit" value="Submit"><br>
         </form> 
     '''
 
-    string = form + format_list_groups(groups)
-    response = HttpResponse(string)                             #!!!!!!
+    string = form + format_list_teachers(teachers)
+    response = HttpResponse(string)
     return response
 
 
-def create_group_view(request):
+def create_teacher_view(request):
     if request.method == 'GET':
-        form = CreateGroupForm()
+        form = CreateTeacherForm()
     elif request.method == 'POST':
-        form = CreateGroupForm(request.POST)
+        form = CreateTeacherForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/groups/')
+            return HttpResponseRedirect('/teachers/')
 
     token = get_token(request)
     html_form = F'''
@@ -59,16 +65,16 @@ def create_group_view(request):
     return HttpResponse(html_form)
 
 
-def update_group(request, pk):
-    group = Group.objects.get(pk=pk)
+def update_teacher(request, pk):
+    teacher = Teacher.objects.get(pk=pk)
 
     if request.method == 'GET':
-        form = UpdateGroupForm(instance=group)
+        form = UpdateTeacherForm(instance=teacher)
     elif request.method == 'POST':
-        form = UpdateGroupForm(request.POST, instance=group)
+        form = UpdateTeacherForm(request.POST, instance=teacher)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/groups/')
+            return HttpResponseRedirect('/teachers/')
 
     token = get_token(request)
     html_form = F'''
@@ -78,7 +84,7 @@ def update_group(request, pk):
                     {form.as_table()}
                 </table>
                 <input type="submit" value="Submit"><br>
-                <a href="/groups/">Back to list</a>
+                <a href="/teachers/">Back to list</a>
             </form> 
         '''
     return HttpResponse(html_form)
