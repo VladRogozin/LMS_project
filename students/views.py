@@ -1,5 +1,6 @@
 from django.db.models import Q
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.middleware.csrf import get_token
 from django.shortcuts import render
 from webargs.fields import Str
@@ -35,20 +36,29 @@ def get_students(request, args):
             Q(first_name=args.get('first_name', '')) | Q(last_name=args.get('last_name', ''))
         )
 
-    form = '''
-        <form method="get">
-            <label for="fname">First name:</label>
-            <input type="text" id="fname" name="first_name"><br><br>
-            <label for="lname">Last name:</label>
-            <input type="text" id="lname" name="last_name"><br><br><br>
-            <input type="submit" value="Submit"><br>
-        </form> 
-    '''
+    # form = '''
+    #     <form method="get">
+    #         <label for="fname">First name:</label>
+    #         <input type="text" id="fname" name="first_name"><br><br>
+    #         <label for="lname">Last name:</label>
+    #         <input type="text" id="lname" name="last_name"><br><br><br>
+    #         <input type="submit" value="Submit"><br>
+    #     </form>
+    # '''
 
-    string = form + format_list_students(students)
-    response = HttpResponse(string)
-    return response
+    # string = form + format_list_students(students)
+    # response = HttpResponse(string)
+    # return response
+    return render(
+        request=request,
+        template_name='students/list.html',
+        context={'title': 'List of Students', 'students': students}
+    )
 
+
+def detail_student(request, pk):
+    student = Student.objects.get(pk=pk)
+    return render(request, 'students/detail.html', {'title': 'Detail of student','student': student})
 
 def create_student_view(request):
     if request.method == 'GET':
@@ -66,7 +76,9 @@ def create_student_view(request):
                 <table>
                     {form.as_table()}
                 </table>
-                <input type="submit" value="Submit"><br>
+                <input type="submit" value="Submit"><br><br>
+                <a href="/students/">Back to list</a>
+                
             </form> 
         '''
     return HttpResponse(html_form)
