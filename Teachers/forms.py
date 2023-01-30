@@ -3,7 +3,7 @@ from django import forms
 from Teachers.models import Teacher
 
 
-class CreateTeacherForm(forms.ModelForm):
+class CreateTeacherForm(forms.ModelForm):               #
     class Meta:
         model = Teacher
         fields = [
@@ -17,7 +17,7 @@ class CreateTeacherForm(forms.ModelForm):
         }
 
 
-class UpdateTeacherForm(forms.ModelForm):
+class UpdateTeacherForm(forms.ModelForm):              #
     class Meta:
         model = Teacher
         fields = [

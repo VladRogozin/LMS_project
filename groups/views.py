@@ -10,34 +10,33 @@ from groups.models import Group
 from groups.utils import format_list_groups
 
 
-@use_args(
+@use_args(                                             #
     {
         'group_name': Str(required=False),
     },
     location='query',
 )
-def get_groups(request, args):
-    groups = Group.objects.all().order_by('group_start')           #!!!!
+def get_groups(request, args):                         #
+    groups = Group.objects.all().order_by('group_start')
 
     if len(args) and args.get('group_name'):
         groups = groups.filter(
             Q(group_name=args.get('group_name', ''))
         )
 
-    form = '''
-        <form method="get">
-            <label for="gname">Group name:</label>
-            <input type="text" id="gname" name="group_name"><br><br>
-            <input type="submit" value="Submit"><br>
-        </form> 
-    '''
-
-    string = form + format_list_groups(groups)
-    response = HttpResponse(string)                             #!!!!!!
-    return response
+    return render(
+        request=request,
+        template_name='groups/list.html',
+        context={'title': 'List of Groups', 'groups': groups}
+    )
 
 
-def create_group_view(request):
+def detail_group(request, pk):
+    group = Group.objects.get(pk=pk)
+    return render(request, 'groups/detail.html', {'title': 'Detail of group','group': group})
+
+
+def create_group_view(request):                        #
     if request.method == 'GET':
         form = CreateGroupForm()
     elif request.method == 'POST':
@@ -59,7 +58,7 @@ def create_group_view(request):
     return HttpResponse(html_form)
 
 
-def update_group(request, pk):
+def update_group(request, pk):                   #
     group = Group.objects.get(pk=pk)
 
     if request.method == 'GET':

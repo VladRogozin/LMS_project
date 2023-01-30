@@ -9,7 +9,7 @@ from .models import Teacher
 from .utils import format_list_teachers
 
 
-def index(request):
+def index(request):                       #
     return HttpResponse('Welcome')
 
 
@@ -20,7 +20,7 @@ def index(request):
     },
     location='query',
 )
-def get_teachers(request, args):
+def get_teachers(request, args):                #
     teachers = Teacher.objects.all().order_by('salary')
 
     if len(args) and (args.get('first_name') or args.get('last_name')):
@@ -28,22 +28,19 @@ def get_teachers(request, args):
             Q(first_name=args.get('first_name', '')) | Q(last_name=args.get('last_name', ''))
         )
 
-    form = '''
-        <form method="get">
-            <label for="fname">First name:</label>
-            <input type="text" id="fname" name="first_name"><br><br>
-            <label for="lname">Last name:</label>
-            <input type="text" id="lname" name="last_name"><br><br><br>
-            <input type="submit" value="Submit"><br>
-        </form> 
-    '''
-
-    string = form + format_list_teachers(teachers)
-    response = HttpResponse(string)
-    return response
+    return render(
+        request=request,
+        template_name='teachers/list.html',
+        context={'title': 'List of Teachers', 'teachers': teachers}
+    )
 
 
-def create_teacher_view(request):
+def detail_teacher(request, pk):
+    teacher = Teacher.objects.get(pk=pk)
+    return render(request, 'teachers/detail.html', {'title': 'Detail of teacher','teacher': teacher})
+
+
+def create_teacher_view(request):                     #
     if request.method == 'GET':
         form = CreateTeacherForm()
     elif request.method == 'POST':
@@ -65,7 +62,7 @@ def create_teacher_view(request):
     return HttpResponse(html_form)
 
 
-def update_teacher(request, pk):
+def update_teacher(request, pk):                      #
     teacher = Teacher.objects.get(pk=pk)
 
     if request.method == 'GET':

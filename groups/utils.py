@@ -1,6 +1,6 @@
 
 
-def format_list_groups(groups):
+def format_list_groups(groups):          #
     string = '<table>' \
              '<thead>' \
              '<tr>' \

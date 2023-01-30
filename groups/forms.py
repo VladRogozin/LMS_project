@@ -3,7 +3,7 @@ from django import forms
 from groups.models import Group
 
 
-class CreateGroupForm(forms.ModelForm):
+class CreateGroupForm(forms.ModelForm):        #
     class Meta:
         model = Group
         fields = [
@@ -16,7 +16,7 @@ class CreateGroupForm(forms.ModelForm):
         }
 
 
-class UpdateGroupForm(forms.ModelForm):
+class UpdateGroupForm(forms.ModelForm):                          #
     class Meta:
         model = Group
         fields = [
