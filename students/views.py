@@ -74,6 +74,7 @@ def create_student_view(request):
 
 def update_student(request, pk):
     student = Student.objects.get(pk=pk)
+
     if request.method == 'GET':
         form = UpdateStudentForm(instance=student)
     elif request.method == 'POST':
@@ -94,3 +95,5 @@ def update_student(request, pk):
             </form> 
         '''
     return HttpResponse(html_form)
+
+
