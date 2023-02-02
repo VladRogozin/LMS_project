@@ -11,10 +11,6 @@ from .models import Student
 from .utils import format_list_students
 
 
-def index(request):
-    return render(request, 'students/index.html')
-
-
 @use_args(
     {
         'first_name': Str(required=False),
@@ -69,7 +65,7 @@ def create_student_view(request):
         form = CreateStudentForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('list'))
+            return HttpResponseRedirect(reverse('students:list'))
 
     return render(request, 'students/create.html', {'form': form})
 
@@ -83,7 +79,7 @@ def update_student(request, pk):
         form = UpdateStudentForm(request.POST, instance=student)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('list'))
+            return HttpResponseRedirect(reverse('students:list'))
 
     return render(request, 'students/update.html', {'form': form})
 
@@ -92,7 +88,7 @@ def delete_student(request, pk):
     st = get_object_or_404(Student, pk=pk)
     if request.method == 'POST':
         st.delete()
-        return HttpResponseRedirect(reverse('list'))
+        return HttpResponseRedirect(reverse('students:list'))
     return render(request, 'students/delete.html', {'student': st})
 
 

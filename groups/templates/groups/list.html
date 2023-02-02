@@ -1,18 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>LMS - {{title}} </title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}List of teachers{% endblock %}
+
+{% block content %}
     <form method="get">
             <label for="gname">Group name:</label>
             <input type="text" id="gname" name="group_name"><br><br>
             <input type="submit" value="Submit"><br>
         </form>
     <br>
-    <a href="/groups/create/">CREATE GROUP</a>
-    <br><br>
+    <br>
     <table>
         <thead>
             <tr>
@@ -20,18 +17,19 @@
                 <th>Group start </th>
                 <th>Group text</th>
                 <th>Update</th>
+                <th>Delete</th>
             </tr>
         <thead>
         <tbody>
             {% for st in groups %}
                 <tr>
-                    <td><a href="/groups/detail/{{st.pk}}/">{{st.group_name}}</a></td>
+                    <td><a href="{% url 'groups:detail' st.pk %}">{{st.group_name}}</a></td>
                     <td>{{st.group_start}}</td>
                     <td>{{st.group_text}}</td>
-                    <td><a href="/groups/update/{{st.pk}}/">Edit</a></td>
+                    <td><a href="{% url 'groups:update' st.pk %}">Edit</a></td>
+                    <td><a href="{% url 'groups:delete' st.pk %}">Remove</a></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+{% endblock %}
