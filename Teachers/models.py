@@ -2,7 +2,7 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 
 
-class Teacher(models.Model):
+class Teacher(models.Model):                    #
     first_name = models.CharField(
         max_length=50,
         verbose_name='First name',
