@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Update student "{{ student.first_name }}"
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <p>Do ypu relly want to remove student <strong>{{ student.first_name }} {{ student.last_name }}</strong></p>
+        <input type="submit" value="Agree">
+        <br><br>
+        <a href="{% url 'students:list' %}">Back to list</a>
+    </form>
+{% endblock %}
