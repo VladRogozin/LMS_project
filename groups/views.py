@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.middleware.csrf import get_token
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from webargs.djangoparser import use_args
 from webargs.fields import Str
 from django.db.models import Q
@@ -32,7 +33,7 @@ def get_groups(request, args):                         #
 
 
 def detail_group(request, pk):
-    group = Group.objects.get(pk=pk)
+    group = get_object_or_404(Group, pk=pk)
     return render(request, 'groups/detail.html', {'title': 'Detail of group','group': group})
 
 
@@ -43,23 +44,13 @@ def create_group_view(request):                        #
         form = CreateGroupForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/groups/')
+            return HttpResponseRedirect(reverse('groups:list'))
 
-    token = get_token(request)
-    html_form = F'''
-            <form method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="{token}">
-                <table>
-                    {form.as_table()}
-                </table>
-                <input type="submit" value="Submit"><br>
-            </form> 
-        '''
-    return HttpResponse(html_form)
+    return render(request, 'groups/create.html', {'form': form})
 
 
 def update_group(request, pk):                   #
-    group = Group.objects.get(pk=pk)
+    group = get_object_or_404(Group, pk=pk)
 
     if request.method == 'GET':
         form = UpdateGroupForm(instance=group)
@@ -67,17 +58,14 @@ def update_group(request, pk):                   #
         form = UpdateGroupForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/groups/')
+            return HttpResponseRedirect(reverse('groups:list'))
 
-    token = get_token(request)
-    html_form = F'''
-            <form method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="{token}">
-                <table>
-                    {form.as_table()}
-                </table>
-                <input type="submit" value="Submit"><br>
-                <a href="/groups/">Back to list</a>
-            </form> 
-        '''
-    return HttpResponse(html_form)
+    return render(request, 'groups/update.html', {'form': form})
+
+
+def delete_group(request, pk):
+    st = get_object_or_404(Group, pk=pk)
+    if request.method == 'POST':
+        st.delete()
+        return HttpResponseRedirect(reverse('groups:list'))
+    return render(request, 'groups/delete.html', {'groups': st})
