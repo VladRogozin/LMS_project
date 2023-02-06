@@ -6,20 +6,24 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from webargs.fields import Str
 from webargs.djangoparser import use_args
-from .forms import CreateStudentForm, UpdateStudentForm
+from .forms import CreateStudentForm, UpdateStudentForm, StudentFilterForm
 from .models import Student
 from .utils import format_list_students
 
 
-@use_args(
-    {
-        'first_name': Str(required=False),
-        'last_name': Str(required=False),
-    },
-    location='query',
-)
-def get_students(request, args):
+# @use_args(
+#     {
+#         'first_name': Str(required=False),
+#         'last_name': Str(required=False),
+#     },
+#     location='query',
+# )
+# def get_students(request, args):
+#     students = Student.objects.all().order_by('birthday')
+def get_students(request):
     students = Student.objects.all().order_by('birthday')
+
+    filter_form = StudentFilterForm(data=request.GET, queryset=students)
 
     # if 'first_name' in args:
     #     students = students.filter(first_name=args['first_name'])
@@ -27,10 +31,10 @@ def get_students(request, args):
     # if 'last_name' in args:
     #     students = students.filter(last_name=args['last_name'])
 
-    if len(args) and (args.get('first_name') or args.get('last_name')):
-        students = students.filter(
-            Q(first_name=args.get('first_name', '')) | Q(last_name=args.get('last_name', ''))
-        )
+    # if len(args) and (args.get('first_name') or args.get('last_name')):
+    #     students = students.filter(
+    #         Q(first_name=args.get('first_name', '')) | Q(last_name=args.get('last_name', ''))
+    #     )
 
     # form = '''
     #     <form method="get">
@@ -48,7 +52,11 @@ def get_students(request, args):
     return render(
         request=request,
         template_name='students/list.html',
-        context={'title': 'List of Students', 'students': students}
+        context={
+            # 'title': 'List of Students',
+            # 'students': students
+            'filter_form': filter_form
+        }
     )
 
 
