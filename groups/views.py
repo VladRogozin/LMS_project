@@ -6,29 +6,22 @@ from webargs.djangoparser import use_args
 from webargs.fields import Str
 from django.db.models import Q
 
-from groups.forms import CreateGroupForm, UpdateGroupForm
+from groups.forms import CreateGroupForm, UpdateGroupForm, GroupFilterForm
 from groups.models import Group
 from groups.utils import format_list_groups
 
 
-@use_args(                                             #
-    {
-        'group_name': Str(required=False),
-    },
-    location='query',
-)
-def get_groups(request, args):                         #
+def get_groups(request):                         #
     groups = Group.objects.all().order_by('group_start')
 
-    if len(args) and args.get('group_name'):
-        groups = groups.filter(
-            Q(group_name=args.get('group_name', ''))
-        )
+    filter_form = GroupFilterForm(data=request.GET, queryset=groups)
 
     return render(
         request=request,
         template_name='groups/list.html',
-        context={'title': 'List of Groups', 'groups': groups}
+        context={
+            'filter_form': filter_form
+        }
     )
 
 
