@@ -13,4 +13,6 @@ urlpatterns = [
 
     path('groups/', include('groups.urls')),
 
+    path('__debug__/', include('debug_toolbar.urls')),
+
 ]
