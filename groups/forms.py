@@ -2,9 +2,19 @@ from django import forms
 from django_filters import FilterSet
 
 from groups.models import Group
+from students.models import Student
 
 
-class CreateGroupForm(forms.ModelForm):        #
+class GroupBaseForm(forms.ModelForm):
+    students = forms.ModelMultipleChoiceField(queryset=None, required=False)
+
+    def save(self, commit=True):
+        new_group = super().save(commit)
+        students = self.cleaned_data['students']
+        for student in students:
+            student.group = new_group
+            student.save()
+
     class Meta:
         model = Group
         fields = [
@@ -17,17 +27,25 @@ class CreateGroupForm(forms.ModelForm):        #
         }
 
 
-class UpdateGroupForm(forms.ModelForm):                          #
-    class Meta:
-        model = Group
-        fields = [
-            'group_name',
-            'group_start',
-            'group_text',
+class CreateGroupForm(GroupBaseForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['students'].queryset = Student.objects.filter(group__isnull=True)
+
+    class Meta(GroupBaseForm.Meta):
+        pass
+
+
+class UpdateGroupForm(GroupBaseForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['students'].queryset = Student.objects.all()
+
+    class Meta(GroupBaseForm.Meta):
+        exclude = [
+            'start_date'
         ]
-        widgets = {
-            'group_start': forms.DateInput(attrs={"type": 'date'})
-        }
 
 
 class GroupFilterForm(FilterSet):
