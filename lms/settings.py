@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'students.apps.StudentsConfig',
     'groups.apps.GroupsConfig',
     'Teachers.apps.TeachersConfig',
+    'courses.apps.CoursesConfig',
 ]
 
 INTERNAL_IPS = [
