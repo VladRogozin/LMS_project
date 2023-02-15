@@ -42,17 +42,19 @@
                 <th>Group name</th>
                 <th>Group start </th>
                 <th>Group text</th>
+                <th>Headman</th>
                 <th><i class="bi bi-pencil-fill"></i></th>
                 <th><i class="bi bi-trash3-fill"></i></th>
             </tr>
         <thead>
         <tbody>
-            {% for st in filter_form.qs %}
+            {% for st in groups %}
                 <tr>
                     <td>{{ forloop.counter}}</td>
                     <td><a href="{% url 'groups:detail' st.pk %}">{{st.group_name}}</a></td>
                     <td class="text-center">{{st.group_start|date:"d M Y" }}</td>
                     <td class="text-center">{{st.group_text}}</td>
+                    <td>{% if st.headman %}{{ st.headman.last_name }} {{ st.headman.first_name }}{% endif %}</td>
                     <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="{% url 'groups:update' st.pk %}">Edit</a></td>
                     <td class="text-center"><a class="btn btn-outline-danger btn-sm" href="{% url 'groups:delete' st.pk %}">Remove</a></td>
                 </tr>

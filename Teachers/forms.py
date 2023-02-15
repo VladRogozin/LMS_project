@@ -10,7 +10,7 @@ class CreateTeacherForm(forms.ModelForm):               #
         fields = [
             'first_name',
             'last_name',
-            'birthdate',
+            'birthday',
             'salary',
         ]
         widgets = {
@@ -24,7 +24,7 @@ class UpdateTeacherForm(forms.ModelForm):              #
         fields = [
             'first_name',
             'last_name',
-            'birthdate',
+            'birthday',
             'salary',
         ]
         widgets = {
