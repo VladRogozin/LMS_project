@@ -13,17 +13,8 @@ from students.models import Student
 
 
 def get_groups(request):                         #
-    groups = Group.objects.all().order_by('group_start')
-
-    filter_form = GroupFilterForm(data=request.GET, queryset=groups)
-
-    return render(
-        request=request,
-        template_name='groups/list.html',
-        context={
-            'filter_form': filter_form
-        }
-    )
+    groups = Group.objects.all()
+    return render(request, 'groups/list.html', {'groups': groups})
 
 
 def detail_group(request, pk):
@@ -46,9 +37,7 @@ def create_group_view(request):                        #
 def update_group(request, pk):
     group = get_object_or_404(Group, pk=pk)
     students = {'students': Student.objects.filter(group=group)}
-    if request.method == 'GET':
-        form = UpdateGroupForm(instance=group)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         form = UpdateGroupForm(data=request.POST, instance=group, initial=students)
         if form.is_valid():
             form.save()
