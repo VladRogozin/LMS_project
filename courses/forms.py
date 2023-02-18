@@ -10,7 +10,7 @@ from courses.models import Course
 """
 
 
-class CreateCourseForm:
+class CreateCourseForm(forms.ModelForm):
     class Meta:
         model = Course
         fields = '__all__'
@@ -20,7 +20,7 @@ class CreateCourseForm:
         }
 
 
-class UpdateCourseForm:
+class UpdateCourseForm(forms.ModelForm):
     class Meta:
         model = Course
         fields = '__all__'
