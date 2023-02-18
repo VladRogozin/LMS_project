@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 from core.models import BaseModel
+from groups.models import Group
 
 
 class Course(BaseModel):
@@ -12,7 +13,7 @@ class Course(BaseModel):
     course_start = models.DateField(default=datetime.date.today)
     course_text = models.TextField(null=True, blank=True)
     course_group = models.OneToOneField(
-        'groups.Group',
+        Group,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

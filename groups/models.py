@@ -2,7 +2,7 @@ from django.db import models
 import datetime
 from Teachers.models import Teacher
 from core.models import BaseModel
-from courses.models import Course
+
 from groups.validators import validate_start_date
 
 
@@ -19,7 +19,6 @@ class Group(BaseModel):
         'students.Student', on_delete=models.SET_NULL, null=True, blank=True, related_name='headman_group'
     )
     teachers = models.ManyToManyField(to=Teacher, blank=True, related_name='groups')
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, related_name='courses')
 
     class Meta:
         db_table = 'groups'
