@@ -7,14 +7,9 @@ from groups.validators import validate_start_date
 
 
 class Group(BaseModel):
-    group_name = models.CharField(
-        max_length=50,
-        verbose_name='group name',
-        db_column='g_name'
-    )
+    group_name = models.CharField(max_length=50, verbose_name='group name', db_column='g_name')
     group_start = models.DateField(default=datetime.date.today)
     group_text = models.TextField(null=True, blank=True)
-
     headman = models.OneToOneField(
         'students.Student', on_delete=models.SET_NULL, null=True, blank=True, related_name='headman_group'
     )
