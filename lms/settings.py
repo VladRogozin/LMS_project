@@ -1,6 +1,7 @@
 from os import getenv
 from pathlib import Path
 
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'groups.apps.GroupsConfig',
     'Teachers.apps.TeachersConfig',
     'courses.apps.CoursesConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 INTERNAL_IPS = [
@@ -91,6 +93,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 3
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -121,3 +126,6 @@ if DEBUG:
 
 CRISPY_ALLOWED_TEMPLATE_PACHS = "bootstrap5"
 CRISPY_TEMPLATE_PACH = "bootstrap5"
+
+LOGIN_REDIRECT_URL = reverse_lazy('students:list')
+LOGOUT_REDIRECT_URL = reverse_lazy('home')
