@@ -81,13 +81,6 @@ def create_student_view(request):
     return render(request, 'students/create.html', {'form': form})
 
 
-class CustomUpdateStudentView(CustomUpdateBaseView):
-    model = Student
-    form_class = UpdateStudentForm
-    success_url = 'students:list'
-    template_name = 'students/update.html'
-
-
 class UpdateStudentView(UpdateView):
     model = Student
     form_class = UpdateStudentForm

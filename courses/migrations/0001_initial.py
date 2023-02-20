@@ -2,7 +2,6 @@
 
 import datetime
 from django.db import migrations, models
-import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -10,23 +9,21 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('courses', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Group',
+            name='Course',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('group_name', models.CharField(db_column='g_name', max_length=50, verbose_name='group name')),
-                ('group_start', models.DateField(default=datetime.date.today)),
-                ('group_text', models.TextField(blank=True, null=True)),
-                ('course_group', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='course_group', to='courses.course')),
+                ('name', models.CharField(db_column='c_name', max_length=50, verbose_name='course name')),
+                ('course_start', models.DateField(default=datetime.date.today)),
+                ('course_text', models.TextField(blank=True, null=True)),
             ],
             options={
-                'db_table': 'groups',
+                'db_table': 'courses',
             },
         ),
     ]
