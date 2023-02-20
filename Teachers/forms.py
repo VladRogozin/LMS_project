@@ -4,7 +4,7 @@ from django_filters import FilterSet
 from Teachers.models import Teacher
 
 
-class CreateTeacherForm(forms.ModelForm):               #
+class CreateTeacherForm(forms.ModelForm):
     class Meta:
         model = Teacher
         fields = [

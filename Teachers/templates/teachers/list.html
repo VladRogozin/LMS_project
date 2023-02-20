@@ -42,7 +42,7 @@
             </tr>
         <thead>
         <tbody>
-            {% for st in filter_form.qs %}
+            {% for st in object_list %}
                 <tr>
                     <td>{{ forloop.counter}}</td>
                     <td><a href="{% url 'teachers:detail' st.pk %}">{{st.first_name}}</a></td>
