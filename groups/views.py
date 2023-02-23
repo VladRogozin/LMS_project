@@ -1,6 +1,5 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic import ListView, CreateView, UpdateView
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from django.urls import reverse, reverse_lazy
 
 from groups.forms import CreateGroupForm, UpdateGroupForm
@@ -14,24 +13,12 @@ class ListGroupView(ListView):
     template_name = 'groups/list.html'
 
 
-def detail_group(request, pk):
-    group = get_object_or_404(Group, pk=pk)
-    return render(request, 'groups/detail.html', {'title': 'Detail of group', 'group': group})
+class DetailGroupView(LoginRequiredMixin, DetailView):
+    model = Group
+    template_name = 'groups/detail.html'
 
 
-# def create_group_view(request):                        #
-#     if request.method == 'GET':
-#         form = CreateGroupForm()
-#     elif request.method == 'POST':
-#         form = CreateGroupForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponseRedirect(reverse('groups:list'))
-#
-#     return render(request, 'groups/create.html', {'form': form})
-
-
-class CreateGroupView(CreateView):
+class CreateGroupView(LoginRequiredMixin, CreateView):
     model = Group
     form_class = CreateGroupForm
     success_url = reverse_lazy('groups:list')
@@ -47,19 +34,7 @@ class CreateGroupView(CreateView):
         return response
 
 
-def update_group(request, pk):
-    group = get_object_or_404(Group, pk=pk)
-    students = {'students': Student.objects.filter(group=group)}
-    if request.method == 'POST':
-        form = UpdateGroupForm(data=request.POST, instance=group, initial=students)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('groups:list'))
-    form = UpdateGroupForm(instance=group, initial=students)
-    return render(request, 'groups/update.html', {'form': form, 'group': group})
-
-
-class UpdateGroupView(UpdateView):
+class UpdateGroupView(LoginRequiredMixin, UpdateView):
     model = Group
     form_class = UpdateGroupForm
     success_url = reverse_lazy('groups:list')
@@ -91,9 +66,7 @@ class UpdateGroupView(UpdateView):
         return response
 
 
-def delete_group(request, pk):
-    st = get_object_or_404(Group, pk=pk)
-    if request.method == 'POST':
-        st.delete()
-        return HttpResponseRedirect(reverse('groups:list'))
-    return render(request, 'groups/delete.html', {'groups': st})
+class DeleteGroupView(LoginRequiredMixin, DeleteView):
+    model = Group
+    success_url = reverse_lazy('groups:list')
+    template_name = 'groups/delete.html'
