@@ -3,6 +3,32 @@ from django import forms
 from groups.models import Group
 
 
+class TeachersInlineTable(admin.TabularInline):
+    model = Group.teachers.through
+    extra = 1
+    verbose_name = 'teacher'
+    filter = ('teacher_first_name', 'teacher_last_name', 'teacher_salary')
+    readonly_fields = filter
+
+    def teacher_first_name(self, instance):
+        return instance.teacher.first_name
+    teacher_first_name.short_description = 'First name'
+
+    def teacher_last_name(self, instance):
+        return instance.teacher.last_name
+    teacher_last_name.short_description = 'Last name'
+
+    def teacher_salary(self, instance):
+        return instance.teacher.salary
+    teacher_salary.short_description = 'salary'
+
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 class StudentsInlineTable(admin.TabularInline):
     from students.models import Student
     model = Student
@@ -43,8 +69,7 @@ class GroupAdmin(admin.ModelAdmin):
         'group_start',
         'group_text',
         'headman',
-        'teachers',
 
     )
 
-    inlines = [StudentsInlineTable, ]
+    inlines = (StudentsInlineTable, TeachersInlineTable)
